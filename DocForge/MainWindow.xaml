@@ -13,6 +13,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
@@ -39,17 +40,17 @@
                    Text="Folder:"
                    TextWrapping="Wrap" />
         <Button Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="2"
                 Width="37"
-                Margin="144,7,0,0"
+                Margin="99,7,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Command="{Binding BrowseFolderCommand}"
                 Content="..." />
         <Button Grid.Row="0"
-                Grid.Column="1"
+                Grid.Column="2"
                 Width="60"
-                Margin="189,7,0,0"
+                Margin="141,7,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Command="{Binding ParseCommand}"
@@ -81,11 +82,29 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
+        <TreeView Name="inheritanceModelTreeView"
+                  Grid.Row="1"
+                  Grid.Column="2"
+                  Margin="5,5,5,5"
+                  ItemsSource="{Binding FilteredModel,
+                                        Mode=TwoWay,
+                                        UpdateSourceTrigger=PropertyChanged}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type model:Model}" ItemsSource="{Binding Classes}">
+                    <TextBlock Text="{Binding Name}" />
+                    <HierarchicalDataTemplate.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type model:Class}" ItemsSource="{Binding InheritanceChildren}">
+                            <TextBlock Text="{Binding Name}" />
+                        </HierarchicalDataTemplate>
+                    </HierarchicalDataTemplate.ItemTemplate>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
         <GroupBox Grid.Row="2"
                   Grid.Column="0"
-                  Grid.ColumnSpan="2"
+                  Grid.ColumnSpan="3"
                   Header="Filters">
-            <Grid Width="622" HorizontalAlignment="Left">
+            <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -98,7 +117,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBox Grid.Column="1"
                          Height="25"
-                         Margin="5,10"
+                         Margin="5"
                          Text="{Binding TopClassFilterString,
                                         Mode=TwoWay,
                                         UpdateSourceTrigger=PropertyChanged}"
@@ -128,7 +147,7 @@
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          Height="25"
-                         Margin="5,11"
+                         Margin="5"
                          Text="{Binding BottomClassFilterString,
                                         Mode=TwoWay,
                                         UpdateSourceTrigger=PropertyChanged}"

@@ -8,6 +8,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace DocForge.ViewModel
 {
@@ -50,6 +51,11 @@ namespace DocForge.ViewModel
         private string bottomClassFilterString;
 
         /// <summary>
+        /// The property include string
+        /// </summary>
+        private string propertyIncludeFilterString;
+
+        /// <summary>
         /// Gets or sets the top class filter string.
         /// </summary>
         public string TopClassFilterString
@@ -65,6 +71,14 @@ namespace DocForge.ViewModel
         {
             get { return this.bottomClassFilterString; }
             set { this.RaiseAndSetIfChanged(ref this.bottomClassFilterString, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the property include string
+        /// </summary>
+        public string PropertyIncludeFilterString {
+            get { return this.propertyIncludeFilterString; }
+            set { this.RaiseAndSetIfChanged(ref this.propertyIncludeFilterString, value); }
         }
 
         /// <summary>
@@ -141,6 +155,7 @@ namespace DocForge.ViewModel
 
             var topLevelFilters = this.TopClassFilterString.Split(new[] { ',' });
             var bottomLevelFilters = this.BottomClassFilterString.Split(new[] { ',' });
+            var propertyFilters = this.PropertyIncludeFilterString.Split(new[] {','});
 
             for (int index = 0; index < topLevelFilters.Length; index++)
             {
@@ -150,12 +165,14 @@ namespace DocForge.ViewModel
 
             if (this.FullModel.Count != 0)
             {
-                var fModel = new Model();
+                var fModel = new Model() { Name = this.FullModel[0].Name };
 
                 foreach (var cl in this.FullModel[0].Classes)
                 {
                     if (topLevelFilters.Contains(cl.Name))
                     {
+                        cl.InheritanceChildren = cl.Classes.DistinctBy(c => c.Name).ToList();
+
                         fModel.Classes.Add(cl.Copy());
                     }
                 }
@@ -163,16 +180,29 @@ namespace DocForge.ViewModel
                 foreach (Class t in fModel.Classes)
                 {
                     var nCl = t;
-                    this.FilterClasses(ref nCl, bottomLevelFilters);
+                    this.FilterClasses(ref nCl, bottomLevelFilters, propertyFilters);
                 }
+
+                fModel.UpdateReferences();
 
                 this.FilteredModel.Add(fModel);
             }
         }
 
-        private void FilterClasses(ref Class classToFilter, string[] bottomLevelFilters)
+        private void FilterClasses(ref Class classToFilter, string[] bottomLevelFilters, string[] propertyFilters)
         {
             var classesClone = new List<Class>(classToFilter.Classes);
+            var propertyClone = new List<Property>(classToFilter.Properties);
+
+            classToFilter.InheritanceChildren = classToFilter.InheritanceChildren.DistinctBy(c => c.Name).ToList();
+
+            foreach (var property in propertyClone)
+            {
+                if (!propertyFilters.Contains(property.Name))
+                {
+                    classToFilter.Properties.Remove(classToFilter.Properties.First(c => c.Name == property.Name));
+                }
+            }
 
             foreach (Class t in classesClone)
             {
@@ -185,7 +215,7 @@ namespace DocForge.ViewModel
                     if (t.Classes.Count > 0)
                     {
                         var foundClass = classToFilter.Classes.First(c => c.Name == t.Name);
-                        this.FilterClasses(ref foundClass, bottomLevelFilters); 
+                        this.FilterClasses(ref foundClass, bottomLevelFilters, propertyFilters); 
                     }
                 }
             }
@@ -200,8 +230,9 @@ namespace DocForge.ViewModel
         {
 #if DEBUG
             this.FolderPath = Directory.GetCurrentDirectory() + "\\mergetest";
-            this.TopClassFilterString = "CfgPatches, CfgVehicles, CfgAmmo, CfgMagazines, CfgWeapons, CfgGroups, CfgVehicleClasses, CfgFactions";
-            this.BottomClassFilterString = "ViewPilot,OpticsIn,CargoLight,HitPoints,Sounds,SpeechVariants,textureSources,AnimationSources,UserActions,Damage,Exhausts,Reflectors,ViewOptics,Library,EventHandlers";
+            this.TopClassFilterString = "CfgVehicles, CfgAmmo, CfgMagazines, CfgWeapons, CfgGroups, CfgVehicleClasses, CfgFactionClasses";
+            this.PropertyIncludeFilterString = "scope,magazines[],weapons[]";
+            this.BottomClassFilterString = "Wheels,complexGearbox,ViewPilot,OpticsIn,CargoLight,HitPoints,Sounds,SpeechVariants,textureSources,AnimationSources,UserActions,Damage,Exhausts,Reflectors,ViewOptics,Library,EventHandlers,gunParticles,manual,close,short,medium,far,CamShakeExplode,CamShakeHit,CamShakeFire,CamShakePlayerFire,GunParticles,Single,FullAuto,single_medium_optics1,single_far_optics2,fullauto_medium,GP25Muzzle,Wounds,UniformInfo,RenderTargets,DestructionEffects,MFD,markerlights,MarkerLights,WingVortices,RotorLibHelicopterProperties,Viewoptics,Arguments,muzzle_rot1,HitEffect,Double,Volley,AIDouble,AIVolley,StandardSound,player,HE,AP,LowROFBMD2,HighROFBMD2,closeBMD2,shortBMD2,mediumBMD2,farBMD2,Single1,Single2,Single3,Burst1,Burst2,Burst3,gunClouds,Far_AI,Medium_AI,Close_AI,Burst,ItemInfo,Close,M1,M1a,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,BaseSoundModeType,OpticsModes,PutMuzzle,Rhs_Mine_Muzzle,ThrowMuzzle,Rhs_Throw_Grenade,Rhs_Throw_Smoke,Rhs_Throw_Flare,Rhs_Throw_Flash";
 #endif
         }
 
@@ -210,7 +241,13 @@ namespace DocForge.ViewModel
         /// </summary>
         public void BrowseFolderCommandExecute()
         {
-            // Do a folder picker and assign to the textbox
+            var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                this.FolderPath = dialog.SelectedPath;
+            }
         }
 
         /// <summary>
@@ -222,7 +259,9 @@ namespace DocForge.ViewModel
 
             // Call on ClassForge
             var parser = new CfgSimpleParser();
-            this.FullModel.Add(parser.ParseDirectoryMerged(this.FolderPath));
+            var model = parser.ParseDirectoryMerged(this.FolderPath);
+            model.Name = this.FolderPath;
+            this.FullModel.Add(model);
         }
     }
 }
