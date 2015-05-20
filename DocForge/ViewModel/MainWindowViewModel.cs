@@ -121,7 +121,12 @@ namespace DocForge.ViewModel
         /// <summary>
         /// Gets the filter command.
         /// </summary>
-        public ReactiveCommand<object> FilterCommand { get; private set; } 
+        public ReactiveCommand<object> FilterCommand { get; private set; }
+
+        /// <summary>
+        /// Gets the generate command.
+        /// </summary>
+        public ReactiveCommand<object> GenerateCommand { get; private set; } 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
@@ -142,8 +147,16 @@ namespace DocForge.ViewModel
             this.FilterCommand = ReactiveCommand.Create();
             this.FilterCommand.Subscribe(_ => this.FilterCommandExecute());
 
+            this.GenerateCommand = ReactiveCommand.Create();
+            this.GenerateCommand.Subscribe(_ => this.GenerateCommandExecute());
+
             // initialize commands
             this.SetProperties();
+        }
+
+        private void GenerateCommandExecute()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
