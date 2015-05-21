@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.ArrayExtensions;
 using ClassForge.Model;
+using DocForge.Helpers;
+using Newtonsoft.Json;
 
 namespace System
 {
@@ -24,6 +26,76 @@ namespace System
         public static string HtmlLinkToPage<T>(this T cl) where T : Class
         {
             return string.Format("<a href=\"{0}\">{1}</a>", cl.HtmlPage(), cl.Name);
+        }
+
+        public static Class TopContainer<T>(this T cl) where T : Class
+        {
+            var containArray = new List<Class>();
+
+            containArray.Add(cl);
+
+            ResolveContainmentBreadcrumb(cl, ref containArray);
+
+            return containArray.Last();
+        }
+
+        public static List<Class> Containers<T>(this T cl) where T : Class
+        {
+            var containArray = new List<Class>();
+
+            containArray.Add(cl);
+
+            ResolveContainmentBreadcrumb(cl, ref containArray);
+
+            return containArray;
+        }
+
+        public static string ClassDiagramJSON<T>(this T cl) where T : Class
+        {
+            PlainClass root;
+
+            if (cl.InheritanceClass != null)
+            {
+                root = new PlainClass()
+                {
+                    name = cl.InheritanceClass.Name
+                };
+
+                var thisClass = new PlainClass()
+                {
+                    name = cl.Name
+                };
+
+                if (cl.InheritanceChildren.Count != 0)
+                {
+                    thisClass.children = new List<PlainClass>();
+                    foreach (var child in cl.InheritanceChildren)
+                    {
+                        thisClass.children.Add(new PlainClass() { name = child.Name });
+                    } 
+                }
+
+                root.children = new List<PlainClass>();
+                root.children.Add(thisClass);
+            }
+            else
+            {
+                root = new PlainClass()
+                {
+                    name = cl.Name
+                };
+
+                if (cl.InheritanceChildren.Count != 0)
+                {
+                    root.children = new List<PlainClass>();
+                    foreach (var child in cl.InheritanceChildren)
+                    {
+                        root.children.Add(new PlainClass() {name = child.Name});
+                    }
+                }
+            }
+
+            return JsonConvert.SerializeObject(root, new JsonSerializerSettings(){ NullValueHandling = NullValueHandling.Ignore});
         }
 
         public static string ContainmentBreadcrumb<T>(this T cl) where T : Class

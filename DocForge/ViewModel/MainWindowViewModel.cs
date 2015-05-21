@@ -59,6 +59,7 @@ namespace DocForge.ViewModel
         private string modelName;
         private string modelDescription;
         private string modelVersion;
+        private string outputPath;
 
         /// <summary>
         /// Gets or sets the top class filter string.
@@ -113,6 +114,12 @@ namespace DocForge.ViewModel
             set { this.RaiseAndSetIfChanged(ref this.modelVersion, value); }
         }
 
+        public string OutputPath
+        {
+            get { return this.outputPath; }
+            set { this.RaiseAndSetIfChanged(ref this.outputPath, value); }
+        }
+
         /// <summary>
         /// Gets or sets the full model.
         /// </summary>
@@ -135,6 +142,8 @@ namespace DocForge.ViewModel
         /// Gets the browse folder command.
         /// </summary>
         public ReactiveCommand<object> BrowseFolderCommand { get; private set; }
+
+        public ReactiveCommand<object> BrowseOutputCommand { get; private set; }
 
         /// <summary>
         /// Gets the parse command.
@@ -173,15 +182,31 @@ namespace DocForge.ViewModel
             this.GenerateCommand = ReactiveCommand.Create();
             this.GenerateCommand.Subscribe(_ => this.GenerateCommandExecute());
 
+            this.BrowseOutputCommand = ReactiveCommand.Create();
+            this.BrowseOutputCommand.Subscribe(_ => this.BrowseOutputCommandExecute());
+
             // initialize commands
             this.SetProperties();
         }
 
+        private void BrowseOutputCommandExecute()
+        {
+            var dialog = new System.Windows.Forms.FolderBrowserDialog();
+            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                this.OutputPath = dialog.SelectedPath;
+            }
+        }
+
         private void GenerateCommandExecute()
         {
+            if(this.FilteredModel == null || this.FilteredModel.Count == 0 || string.IsNullOrWhiteSpace(this.OutputPath)) return;
+
             var docGen = new HtmlGenerator();
 
-            docGen.GenerateDocumentation(this.FilteredModel[0]);
+            docGen.GenerateDocumentation(this.FilteredModel[0], this.OutputPath, this.ModelName, this.ModelVersion, this.ModelDescription);
         }
 
         /// <summary>
@@ -189,6 +214,8 @@ namespace DocForge.ViewModel
         /// </summary>
         private void FilterCommandExecute()
         {
+            if (this.FullModel == null || this.FullModel.Count == 0) return;
+
             this.FilteredModel = new ObservableCollection<Model>();
 
             var topLevelFilters = this.TopClassFilterString.Split(new[] { ',' });
@@ -270,6 +297,10 @@ namespace DocForge.ViewModel
             this.FolderPath = Directory.GetCurrentDirectory() + "\\mergetest";
             this.TopClassFilterString = "CfgVehicles, CfgAmmo, CfgMagazines, CfgWeapons, CfgGroups, CfgVehicleClasses, CfgFactionClasses";
             this.PropertyIncludeFilterString = "scope,magazines[],weapons[]";
+            this.ModelName = "Red Hammer Studios";
+            this.ModelDescription = "RHS: Armed Forces of the Russian Federation";
+            this.ModelVersion = "0.3.8";
+            this.OutputPath = "P:\\afrfclassdoc";
             this.BottomClassFilterString = "Wheels,complexGearbox,ViewPilot,OpticsIn,CargoLight,HitPoints,Sounds,SpeechVariants,textureSources,AnimationSources,UserActions,Damage,Exhausts,Reflectors,ViewOptics,Library,EventHandlers,gunParticles,manual,close,short,medium,far,CamShakeExplode,CamShakeHit,CamShakeFire,CamShakePlayerFire,GunParticles,Single,FullAuto,single_medium_optics1,single_far_optics2,fullauto_medium,GP25Muzzle,Wounds,UniformInfo,RenderTargets,DestructionEffects,MFD,markerlights,MarkerLights,WingVortices,RotorLibHelicopterProperties,Viewoptics,Arguments,muzzle_rot1,HitEffect,Double,Volley,AIDouble,AIVolley,StandardSound,player,HE,AP,LowROFBMD2,HighROFBMD2,closeBMD2,shortBMD2,mediumBMD2,farBMD2,Single1,Single2,Single3,Burst1,Burst2,Burst3,gunClouds,Far_AI,Medium_AI,Close_AI,Burst,ItemInfo,Close,M1,M1a,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,BaseSoundModeType,OpticsModes,PutMuzzle,Rhs_Mine_Muzzle,ThrowMuzzle,Rhs_Throw_Grenade,Rhs_Throw_Smoke,Rhs_Throw_Flare,Rhs_Throw_Flash";
 #endif
         }
