@@ -1,13 +1,64 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net.Sockets;
 using System.Reflection;
 using System.ArrayExtensions;
+using ClassForge.Model;
 
 namespace System
 {
     public static class ObjectExtensions
     {
-        public static IEnumerable<TSource> DistinctBy<TSource, TKey>
-    (this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        public static string HtmlPage<T>(this T cl) where T : Class
+        {
+            var result = cl.Name + ".html";
+
+            if (cl.ContainmentParent != null)
+            {
+               result = ComputePageName(cl, result);
+            }
+
+            return result;
+        }
+
+        public static string HtmlLinkToPage<T>(this T cl) where T : Class
+        {
+            return string.Format("<a href=\"{0}\">{1}</a>", cl.HtmlPage(), cl.Name);
+        }
+
+        public static string ContainmentBreadcrumb<T>(this T cl) where T : Class
+        {
+            var containArray = new List<Class>();
+
+            ResolveContainmentBreadcrumb(cl, ref containArray);
+
+            containArray.Reverse();
+            return string.Join(" > ", containArray.Select(s => s.HtmlLinkToPage()));
+        }
+
+        private static void ResolveContainmentBreadcrumb(Class cl, ref List<Class> containArray)
+        {
+            if (cl.ContainmentParent != null)
+            {
+                containArray.Add(cl.ContainmentParent);
+                ResolveContainmentBreadcrumb(cl.ContainmentParent, ref containArray);
+            }
+        }
+
+        public static string ComputePageName(Class cl, string computed)
+        {
+            var parent = cl.ContainmentParent;
+            var result = string.Format("{0}_{1}", parent.Name, computed);
+
+            if (parent.ContainmentParent != null)
+            {
+                result = ComputePageName(parent, result);
+            }
+
+            return result;
+        }
+        
+        public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             HashSet<TKey> seenKeys = new HashSet<TKey>();
             foreach (TSource element in source)

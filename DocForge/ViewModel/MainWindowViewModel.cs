@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using System.Windows.Forms;
+using DocForge.Helpers;
 
 namespace DocForge.ViewModel
 {
@@ -55,6 +56,10 @@ namespace DocForge.ViewModel
         /// </summary>
         private string propertyIncludeFilterString;
 
+        private string modelName;
+        private string modelDescription;
+        private string modelVersion;
+
         /// <summary>
         /// Gets or sets the top class filter string.
         /// </summary>
@@ -88,6 +93,24 @@ namespace DocForge.ViewModel
         {
             get { return this.folderPath; }
             set { this.RaiseAndSetIfChanged(ref this.folderPath, value); }
+        }
+
+        public string ModelName
+        {
+            get { return this.modelName; }
+            set { this.RaiseAndSetIfChanged(ref this.modelName, value); }
+        }
+
+        public string ModelDescription
+        {
+            get { return this.modelDescription; }
+            set { this.RaiseAndSetIfChanged(ref this.modelDescription, value); }
+        }
+
+        public string ModelVersion
+        {
+            get { return this.modelVersion; }
+            set { this.RaiseAndSetIfChanged(ref this.modelVersion, value); }
         }
 
         /// <summary>
@@ -156,7 +179,9 @@ namespace DocForge.ViewModel
 
         private void GenerateCommandExecute()
         {
-            throw new NotImplementedException();
+            var docGen = new HtmlGenerator();
+
+            docGen.GenerateDocumentation(this.FilteredModel[0]);
         }
 
         /// <summary>
@@ -168,7 +193,7 @@ namespace DocForge.ViewModel
 
             var topLevelFilters = this.TopClassFilterString.Split(new[] { ',' });
             var bottomLevelFilters = this.BottomClassFilterString.Split(new[] { ',' });
-            var propertyFilters = this.PropertyIncludeFilterString.Split(new[] {','});
+            var propertyFilters = this.PropertyIncludeFilterString.Split(new[] { ',' });
 
             for (int index = 0; index < topLevelFilters.Length; index++)
             {
@@ -184,7 +209,7 @@ namespace DocForge.ViewModel
                 {
                     if (topLevelFilters.Contains(cl.Name))
                     {
-                        cl.InheritanceChildren = cl.Classes.DistinctBy(c => c.Name).ToList();
+                        //cl.InheritanceChildren = cl.Classes.DistinctBy(c => c.Name).ToList();
 
                         fModel.Classes.Add(cl.Copy());
                     }
@@ -213,7 +238,7 @@ namespace DocForge.ViewModel
             {
                 if (!propertyFilters.Contains(property.Name))
                 {
-                    classToFilter.Properties.Remove(classToFilter.Properties.First(c => c.Name == property.Name));
+                    classToFilter.Properties.RemoveAll(c => c.Name == property.Name);
                 }
             }
 

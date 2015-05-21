@@ -13,48 +13,51 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
             <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBox Grid.Row="0"
-                 Grid.Column="0"
-                 Grid.ColumnSpan="2"
-                 Width="387"
-                 Height="23"
-                 Margin="65,7,0,0"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Top"
-                 IsEnabled="False"
-                 Text="{Binding FolderPath,
-                                Mode=TwoWay,
-                                UpdateSourceTrigger=PropertyChanged}"
-                 TextWrapping="Wrap" />
-        <TextBlock Grid.Row="0"
-                   Margin="10,10,0,0"
-                   HorizontalAlignment="Left"
-                   VerticalAlignment="Top"
-                   Text="Folder:"
-                   TextWrapping="Wrap" />
-        <Button Grid.Row="0"
-                Grid.Column="2"
-                Width="37"
-                Margin="99,7,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Command="{Binding BrowseFolderCommand}"
-                Content="..." />
-        <Button Grid.Row="0"
-                Grid.Column="2"
-                Width="60"
-                Margin="141,7,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Command="{Binding ParseCommand}"
-                Content="Parse" />
+        <StackPanel Grid.Row="0"
+                    Grid.ColumnSpan="3"
+                    Orientation="Horizontal">
+            <TextBlock Margin="10,10,0,0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Text="Folder:"
+                       TextWrapping="Wrap" />
+            <TextBox Width="387"
+                     Height="23"
+                     Margin="5"
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
+                     IsEnabled="False"
+                     Text="{Binding FolderPath,
+                                    Mode=TwoWay,
+                                    UpdateSourceTrigger=PropertyChanged}"
+                     TextWrapping="Wrap" />
+            <Button Width="37"
+                    Margin="5"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Command="{Binding BrowseFolderCommand}"
+                    Content="..." />
+            <Button Width="60"
+                    Margin="5"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Command="{Binding ParseCommand}"
+                    Content="Parse" />
+            <Button Width="60"
+                    Margin="5"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Command="{Binding GenerateCommand}"
+                    Content="Generate" />
+        </StackPanel>
+
 
         <TreeView Name="fullModelTreeView"
                   Grid.Row="1"
@@ -104,7 +107,7 @@
                   Grid.Column="0"
                   Grid.ColumnSpan="3"
                   Header="Filters">
-            <Grid >
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
