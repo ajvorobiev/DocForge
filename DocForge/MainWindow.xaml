@@ -5,7 +5,7 @@
         xmlns:model="clr-namespace:ClassForge.Model;assembly=ClassForge"
         Title="DocForge"
         Width="1139.136"
-        Height="613.563">
+        Height="629.981">
     <Window.DataContext>
         <ViewModel:MainWindowViewModel />
     </Window.DataContext>
@@ -13,8 +13,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
@@ -50,14 +50,14 @@
                     VerticalAlignment="Top"
                     Command="{Binding ParseCommand}"
                     Content="Parse" />
-            
+
         </StackPanel>
 
 
         <TreeView Name="fullModelTreeView"
                   Grid.Row="1"
                   Grid.Column="0"
-                  Margin="5,5,5,2"
+                  Margin="5"
                   ItemsSource="{Binding FullModel,
                                         Mode=TwoWay,
                                         UpdateSourceTrigger=PropertyChanged}">
@@ -70,7 +70,7 @@
         <TreeView Name="filteredModelTreeView"
                   Grid.Row="1"
                   Grid.Column="1"
-                  Margin="5,5,5,2"
+                  Margin="5"
                   ItemsSource="{Binding FilteredModel,
                                         Mode=TwoWay,
                                         UpdateSourceTrigger=PropertyChanged}">
@@ -83,10 +83,10 @@
         <TreeView Name="inheritanceModelTreeView"
                   Grid.Row="1"
                   Grid.Column="2"
-                  Margin="5,5,5,5"
+                  Margin="5"
                   ItemsSource="{Binding FilteredModel,
                                         Mode=TwoWay,
-                                        UpdateSourceTrigger=PropertyChanged}" >
+                                        UpdateSourceTrigger=PropertyChanged}">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type model:Model}" ItemsSource="{Binding Classes}">
                     <TextBlock Text="{Binding Name}" />
@@ -98,21 +98,26 @@
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
-        <StackPanel Grid.Row="0" Grid.Column="3" Grid.RowSpan="2">
+        <StackPanel Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Grid.Column="3">
             <GroupBox Grid.Row="0"
-                      Grid.Column="3"
                       Grid.RowSpan="2"
-                      Header="Filters"  VerticalAlignment="Bottom">
-            <StackPanel Orientation="Vertical">
+                      Grid.Column="3"
+                      VerticalAlignment="Bottom"
+                      Header="Filters">
+                <StackPanel Orientation="Vertical">
                     <TextBlock Height="25"
                                Margin="5"
                                Text="Top Level Includes"
                                TextWrapping="Wrap" />
-                    
-                    <TextBox Margin="5" Text="{Binding TopClassFilterString,
+
+                    <TextBox Height="81"
+                             Margin="5"
+                             Text="{Binding TopClassFilterString,
                                             Mode=TwoWay,
                                             UpdateSourceTrigger=PropertyChanged}"
-                             TextWrapping="Wrap"  Height="81" />
+                             TextWrapping="Wrap" />
                     <TextBlock Margin="5"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Top"
@@ -148,27 +153,31 @@
             </GroupBox>
             <GroupBox Header="Generator">
                 <StackPanel>
-                    <TextBlock Margin="5" Text="Project Name"/>
-                    <TextBox Margin="5" Text="{Binding ModelName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock Margin="5" Text="Project Version"/>
-                    <TextBox Margin="5" Text="{Binding ModelVersion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock Margin="5" Text="Project Description"/>
-                    <TextBox Margin="5" Text="{Binding ModelDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Margin="5" Text="Author Name" />
+                    <TextBox Margin="5" Text="{Binding ModelName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Margin="5" Text="Project Version" />
+                    <TextBox Margin="5" Text="{Binding ModelVersion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Margin="5" Text="Project Name" />
+                    <TextBox Margin="5" Text="{Binding ModelDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Margin="5" Text="Output Path"/>
-                        <TextBox Margin="5" Width="200" Text="{Binding OutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Margin="5" Text="Output Path" />
+                        <TextBox Width="200"
+                                 Margin="5"
+                                 Text="{Binding OutputPath,
+                                                Mode=TwoWay,
+                                                UpdateSourceTrigger=PropertyChanged}" />
                         <Button Width="35"
-                            Margin="5"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Command="{Binding BrowseOutputCommand}"
-                            Content="..."></Button>
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Command="{Binding BrowseOutputCommand}"
+                                Content="..." />
                         <Button Width="75"
-                            Margin="5"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Command="{Binding GenerateCommand}"
-                            Content="Generate"></Button>
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Top"
+                                Command="{Binding GenerateCommand}"
+                                Content="Generate" />
                     </StackPanel>
                 </StackPanel>
             </GroupBox>

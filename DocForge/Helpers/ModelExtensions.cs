@@ -28,6 +28,21 @@ namespace System
             return string.Format("<a href=\"{0}\">{1}</a>", cl.HtmlPage(), cl.Name);
         }
 
+        public static string HtmlLinkToPageFocused<T>(this T cl) where T : Class
+        {
+            return string.Format("<a href=\"{0}\" class=\"focus\">{1}</a>", cl.HtmlPage(), cl.Name);
+        }
+
+        public static string HtmlLinkToTopPage<T>(this T cl) where T : Class
+        {
+            return string.Format("<a href=\"{0}\" class=\"topcontainer\">{1}</a>", cl.HtmlPage(), cl.Name);
+        }
+
+        public static string HtmlLinkToTopPageFocused<T>(this T cl) where T : Class
+        {
+            return string.Format("<a href=\"{0}\" class=\"topcontainer-focus\">{1}</a>", cl.HtmlPage(), cl.Name);
+        }
+
         public static Class TopContainer<T>(this T cl) where T : Class
         {
             var containArray = new List<Class>();
@@ -48,6 +63,43 @@ namespace System
             ResolveContainmentBreadcrumb(cl, ref containArray);
 
             return containArray;
+        }
+
+        public static string ModelDiagramJSON<T>(this T m, string name) where T : Model
+        {
+            var nodes = new List<string>();
+
+            nodes.Add(string.Format(@"[{{ v: '{0}', f: '{1}' }}, '{2}', '{3}']", name, name, string.Empty, name));
+
+            foreach (var c in m.Classes)
+            {
+                nodes.Add(string.Format(@"[{{ v: '{0}', f: '{1}' }}, '{2}', '{3}']", c.Name, c.HtmlLinkToPage(), name, c.Name));
+            }
+
+            return string.Join(",", nodes);
+        }
+
+        public static string ModelDiagramJSON<T>(this T cx) where T : Class
+        {
+            var nodes = new List<string>();
+
+            if (cx.InheritanceClass != null)
+            {
+                nodes.Add(string.Format(@"[{{ v: '{0}', f: '{1}' }}, '{2}', '{3}']", cx.InheritanceClass.Name,
+                    cx.InheritanceClass.HtmlLinkToPage(), string.Empty, cx.InheritanceClass.Name));
+                nodes.Add(string.Format(@"[{{ v: '{0}', f: '{1}' }}, '{2}', '{3}']", cx.Name, cx.Name, cx.InheritanceClass.Name, cx.Name));
+            }
+            else
+            {
+                nodes.Add(string.Format(@"[{{ v: '{0}', f: '{1}' }}, '{2}', '{3}']", cx.Name, cx.Name, string.Empty, cx.Name));
+            }
+
+            foreach (var c in cx.InheritanceChildren)
+            {
+                nodes.Add(string.Format(@"[{{ v: '{0}', f: '{1}' }}, '{2}', '{3}']", c.Name, c.HtmlLinkToPage(), cx.Name, c.Name));
+            }
+
+            return string.Join(",", nodes);
         }
 
         public static string ClassDiagramJSON<T>(this T cl) where T : Class

@@ -60,6 +60,9 @@ namespace DocForge.ViewModel
         private string modelDescription;
         private string modelVersion;
         private string outputPath;
+        private string[] propertyFilters;
+        private string[] topLevelFilters;
+        private string[] bottomLevelFilters;
 
         /// <summary>
         /// Gets or sets the top class filter string.
@@ -206,7 +209,7 @@ namespace DocForge.ViewModel
 
             var docGen = new HtmlGenerator();
 
-            docGen.GenerateDocumentation(this.FilteredModel[0], this.OutputPath, this.ModelName, this.ModelVersion, this.ModelDescription);
+            docGen.GenerateDocumentation(this.FilteredModel[0], this.OutputPath, this.ModelName, this.ModelVersion, this.ModelDescription, this.topLevelFilters, this.bottomLevelFilters, this.propertyFilters);
         }
 
         /// <summary>
@@ -218,9 +221,9 @@ namespace DocForge.ViewModel
 
             this.FilteredModel = new ObservableCollection<Model>();
 
-            var topLevelFilters = this.TopClassFilterString.Split(new[] { ',' });
-            var bottomLevelFilters = this.BottomClassFilterString.Split(new[] { ',' });
-            var propertyFilters = this.PropertyIncludeFilterString.Split(new[] { ',' });
+            this.topLevelFilters = this.TopClassFilterString.Split(new[] { ',' });
+            this.bottomLevelFilters = this.BottomClassFilterString.Split(new[] { ',' });
+            this.propertyFilters = this.PropertyIncludeFilterString.Split(new[] { ',' });
 
             for (int index = 0; index < topLevelFilters.Length; index++)
             {
@@ -246,6 +249,7 @@ namespace DocForge.ViewModel
                 {
                     var nCl = t;
                     this.FilterClasses(ref nCl, bottomLevelFilters, propertyFilters);
+                    this.FilterProperties(ref nCl, propertyFilters);
                 }
 
                 fModel.UpdateReferences();
@@ -254,20 +258,33 @@ namespace DocForge.ViewModel
             }
         }
 
-        private void FilterClasses(ref Class classToFilter, string[] bottomLevelFilters, string[] propertyFilters)
+        private void FilterProperties(ref Class nCl, string[] propertyFilters)
         {
-            var classesClone = new List<Class>(classToFilter.Classes);
-            var propertyClone = new List<Property>(classToFilter.Properties);
-
-            classToFilter.InheritanceChildren = classToFilter.InheritanceChildren.DistinctBy(c => c.Name).ToList();
-
+            var propertyClone = new List<Property>(nCl.Properties);
+            
             foreach (var property in propertyClone)
             {
                 if (!propertyFilters.Contains(property.Name))
                 {
-                    classToFilter.Properties.RemoveAll(c => c.Name == property.Name);
+                    nCl.Properties.RemoveAll(c => c.Name == property.Name);
                 }
             }
+
+            foreach (var cl in nCl.Classes)
+            {
+                var c = cl;
+                this.FilterProperties(ref c, propertyFilters);
+            }
+        }
+
+        private void FilterClasses(ref Class classToFilter, string[] bottomLevelFilters, string[] propertyFilters)
+        {
+            var classesClone = new List<Class>(classToFilter.Classes);
+            
+
+            classToFilter.InheritanceChildren = classToFilter.InheritanceChildren.DistinctBy(c => c.Name).ToList();
+
+            
 
             foreach (Class t in classesClone)
             {
@@ -300,7 +317,7 @@ namespace DocForge.ViewModel
             this.ModelName = "Red Hammer Studios";
             this.ModelDescription = "RHS: Armed Forces of the Russian Federation";
             this.ModelVersion = "0.3.8";
-            this.OutputPath = "P:\\afrfclassdoc";
+            this.OutputPath = "C:\\afrfclassdoc";
             this.BottomClassFilterString = "Wheels,complexGearbox,ViewPilot,OpticsIn,CargoLight,HitPoints,Sounds,SpeechVariants,textureSources,AnimationSources,UserActions,Damage,Exhausts,Reflectors,ViewOptics,Library,EventHandlers,gunParticles,manual,close,short,medium,far,CamShakeExplode,CamShakeHit,CamShakeFire,CamShakePlayerFire,GunParticles,Single,FullAuto,single_medium_optics1,single_far_optics2,fullauto_medium,GP25Muzzle,Wounds,UniformInfo,RenderTargets,DestructionEffects,MFD,markerlights,MarkerLights,WingVortices,RotorLibHelicopterProperties,Viewoptics,Arguments,muzzle_rot1,HitEffect,Double,Volley,AIDouble,AIVolley,StandardSound,player,HE,AP,LowROFBMD2,HighROFBMD2,closeBMD2,shortBMD2,mediumBMD2,farBMD2,Single1,Single2,Single3,Burst1,Burst2,Burst3,gunClouds,Far_AI,Medium_AI,Close_AI,Burst,ItemInfo,Close,M1,M1a,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,BaseSoundModeType,OpticsModes,PutMuzzle,Rhs_Mine_Muzzle,ThrowMuzzle,Rhs_Throw_Grenade,Rhs_Throw_Smoke,Rhs_Throw_Flare,Rhs_Throw_Flash";
 #endif
         }

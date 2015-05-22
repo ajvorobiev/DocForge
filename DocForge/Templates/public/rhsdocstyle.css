@@ -6,6 +6,28 @@
     margin: 0 auto -4em;
 }
 
+.nav-pills li>.topcontainer {
+    color: #333333;
+}
+
+.nav-pills li>.topcontainer-focus {
+    color: #ae1d00;
+}
+
+.nav-pills li>a {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.nav-pills li>a.focus{
+    background-color: #f7f7f7;
+    border-color: #ddd;
+}
+
+.nav {
+    padding-left: 10px;
+}
+
 .node circle {
   fill: #fff;
   stroke: steelblue;
@@ -127,7 +149,7 @@ a {
 
 h1 {
     padding-bottom: 9px;
-    margin: 40px 0 20px;
+    margin: 0px 0 20px;
     border-bottom: 1px solid #eeeeee;
 }
 
@@ -137,8 +159,13 @@ table{
     margin-bottom: 20px;
 }
 
+.google-visualization-orgchart-table {
+    width: 0%;
+    max-width: 100%;
+}
+
 table > tbody > tr:nth-child(even) {
-    background-color: #f9f9f9;
+    /*background-color: #f9f9f9;*/
 }
 
 table > tr:nth-child(odd) {
@@ -154,7 +181,6 @@ table > thead > tr > th, table > tbody > tr > th, table > tfoot > tr > th, table
     padding: 8px;
     line-height: 1.42857143;
     vertical-align: top;
-    border-top: 1px solid #dddddd;
 }
 
 table > thead > tr > th, table > tbody > tr > th, table > tfoot > tr > th, table > thead > tr > td, table > tbody > tr > td, table > tfoot > tr > td
@@ -831,4 +857,8 @@ td.hidden-table-element
 .mirror-button:hover {
 	color: #fff;
 	background-color: #8e44ad;
+}
+
+ul {
+    -webkit-padding-start: 8px;
 }

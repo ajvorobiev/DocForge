@@ -11,6 +11,32 @@
     <link rel="stylesheet" type="text/css" href="public/rhsdocstyle.css">
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <!--<link href="http://www.rhsmods.org/css/rhsstyle.css" rel="stylesheet"/>-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+         google.load("visualization", "1", { packages: ["orgchart"] });
+         google.setOnLoadCallback(drawChart);
+         function drawChart() {
+             var data = new google.visualization.DataTable();
+
+             data.addColumn('string', 'Name');
+             data.addColumn('string', 'Parent');
+             data.addColumn('string', 'ToolTip');
+
+             data.addRows([
+               [$modelgraph]
+             ]);
+
+             var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+             var options = {
+                 allowHtml: true,
+                 size: 'medium',
+                 nodeClass: 'chart-node'
+             };
+
+             chart.draw(data, options);
+         }
+   </script>
+
 </head>
     <body>
         <div class="container">
@@ -22,8 +48,9 @@
                             <h1>[$classname]</h1>
                             <p>Inherits: [$classinherits]<br/>Contained in: [$classparent]</p>
                             <p>[$classremark]</p>
-                            <div id="classdiag"></div>
-                            <script>
+                            <!--<div id="classdiag"></div>-->
+                            <div id="chart_div"></div>
+                            <!--<script>
 
                                 var width = 850,
                                     height = 300;
@@ -69,7 +96,7 @@
 
                                 d3.select(self.frameElement).style("height", height + "px");
 
-                            </script>
+                            </script>-->
                         </div>
                     </div>
                     <div class="row">
@@ -96,9 +123,12 @@
         <nav class="navbar navbar-default navbar-fixed-bottom">
             <div class="container">
                 <div class="navbar-left">
-                    <p class="navbar-text">Copyright ⓒ 2015 Red Hammer Studios. <a href="https://github.com/ajvorobiev/DocForge">DocForge</a> by Alex Vorobiev.</p>
+                    <p class="navbar-text">Copyright ⓒ 2015 [$modelname]. Class documentation generated on [$date] using <a href="https://github.com/ajvorobiev/DocForge">DocForge</a> by Alex Vorobiev.</p>
                 </div>
             </div>
         </nav>
+        <script language="javascript">
+            document.getElementById('navfocus').focus();
+        </script>
     </body>
 </html>

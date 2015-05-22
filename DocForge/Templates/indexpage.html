@@ -10,6 +10,31 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="public/rhsdocstyle.css">
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load("visualization", "1", { packages: ["orgchart"] });
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            
+            data.addColumn('string', 'Name');
+            data.addColumn('string', 'Parent');
+            data.addColumn('string', 'ToolTip');
+
+            data.addRows([
+              [$modelgraph]
+            ]);
+
+            var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+            var options = {
+                allowHtml: true,
+                size: 'medium',
+                nodeClass: 'chart-node'
+            };
+
+            chart.draw(data, options);
+        }
+   </script>
 
     <!--<link href="http://www.rhsmods.org/css/rhsstyle.css" rel="stylesheet"/>-->
 </head>
@@ -17,65 +42,33 @@
     <div class="container wrapper">
         <div class="row">
             <div class="col-md-12">
-                <div class="center-block" style="text-align: center;">
+                <div class="center-text" style="text-align: center;">
+                    <img src="public/logo.png" width="260"/>
                     <h1>[$modelname]</h1>
                     <h3>[$modelversion]</h3>
-                    <p>[$modeldescription]</p>
-                    <script>
-
-                        var width = 960,
-                            height = 2000;
-
-                        var tree = d3.layout.tree()
-                            .size([height, width - 160]);
-
-                        var diagonal = d3.svg.diagonal()
-                            .projection(function (d) { return [d.y, d.x]; });
-
-                        var svg = d3.select("body").append("svg")
-                            .attr("width", width)
-                            .attr("height", height)
-                          .append("g")
-                            .attr("transform", "translate(40,0)");
-
-                        var json = [$digramjson];
-
-                        var nodes = tree.nodes(json),
-                            links = tree.links(nodes);
-
-                        var link = svg.selectAll("path.link")
-                            .data(links)
-                            .enter().append("path")
-                            .attr("class", "link")
-                            .attr("d", diagonal);
-
-                        var node = svg.selectAll("g.node")
-                            .data(nodes)
-                            .enter().append("g")
-                            .attr("class", "node")
-                            .attr("transform", function (d) { return "translate(" + d.y + "," + d.x + ")"; })
-
-                        node.append("circle")
-                            .attr("r", 4.5);
-
-                        node.append("text")
-                            .attr("dx", function (d) { return d.children ? -8 : 8; })
-                            .attr("dy", 3)
-                            .attr("text-anchor", function (d) { return d.children ? "end" : "start"; })
-                            .text(function (d) { return d.name; });
-                        
-
-                        d3.select(self.frameElement).style("height", height + "px");
-
-                    </script>
+                    <p>Class Documentation</p>
+                    <div id="chart_div"></div>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Instructions</h2>
+                <p>The class documentation for this project allows you to browse the inheritance and containments structures of the configuration files. Each class has a separate page which allows you to see some properties of that class, where it inherits from and whether there are any classes inheriting from it. Any classes that are contained within it are also displayed. The left navigation pane provides a containment style navigation, while the diagram on every page shows the immediate inheritance tree of that class. Click on one of the above top containers to start browsing.</p>
+                <h2>Documentation Filter Settings</h2>
+                <p>The documentation was generated with the following settings. The container classes that were included:</p>
+                <pre>[$toplevel]</pre>
+                <p>The non-container classes that were excluded:</p>
+                <pre>[$midlevel]</pre>
+                <p>The properties that were included:</p>
+                <pre>[$lowlevel]</pre>
             </div>
         </div>
     </div>
     <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="container">
             <div class="navbar-left">
-                <p class="navbar-text">Copyright ⓒ 2015 Red Hammer Studios. <a href="https://github.com/ajvorobiev/DocForge">DocForge</a> by Alex Vorobiev.</p>
+                <p class="navbar-text">Copyright ⓒ 2015 [$modelname]. Class documentation generated on [$date] using <a href="https://github.com/ajvorobiev/DocForge">DocForge</a> by Alex Vorobiev.</p>
             </div>
         </div>
     </nav>
