@@ -313,11 +313,11 @@ namespace DocForge.ViewModel
 #if DEBUG
             this.FolderPath = Directory.GetCurrentDirectory() + "\\mergetest";
             this.TopClassFilterString = "CfgVehicles, CfgAmmo, CfgMagazines, CfgWeapons, CfgGroups, CfgVehicleClasses, CfgFactionClasses";
-            this.PropertyIncludeFilterString = "scope,magazines[],weapons[]";
+            this.PropertyIncludeFilterString = "scope,magazines[],weapons[],enginePower,maxOmega,peakTorque,fuelCapacity,canFloat,maxFordingDepth,idleRPM,redRPM,maxSpeed,GearboxRatios,differentialType,maxBrakeTorque,maxHandBrakeTorque,compatibleItems[],hit,indirectHit,indirectHitRange,defaultMagazine,cost,ais_ce_penetrators[],ammo,muzzles[],displayName,inertia,vehicleClass,crew,faction,hiddenSelections[],hiddenSelectionsTextures[],torqueCurve[]";
             this.ModelName = "Red Hammer Studios";
             this.ModelDescription = "RHS: Armed Forces of the Russian Federation";
             this.ModelVersion = "0.3.8";
-            this.OutputPath = "C:\\afrfclassdoc";
+            this.OutputPath = "C:\\rhsclassdocs\\rhsafrf";
             this.BottomClassFilterString = "Wheels,complexGearbox,ViewPilot,OpticsIn,CargoLight,HitPoints,Sounds,SpeechVariants,textureSources,AnimationSources,UserActions,Damage,Exhausts,Reflectors,ViewOptics,Library,EventHandlers,gunParticles,manual,close,short,medium,far,CamShakeExplode,CamShakeHit,CamShakeFire,CamShakePlayerFire,GunParticles,Single,FullAuto,single_medium_optics1,single_far_optics2,fullauto_medium,GP25Muzzle,Wounds,UniformInfo,RenderTargets,DestructionEffects,MFD,markerlights,MarkerLights,WingVortices,RotorLibHelicopterProperties,Viewoptics,Arguments,muzzle_rot1,HitEffect,Double,Volley,AIDouble,AIVolley,StandardSound,player,HE,AP,LowROFBMD2,HighROFBMD2,closeBMD2,shortBMD2,mediumBMD2,farBMD2,Single1,Single2,Single3,Burst1,Burst2,Burst3,gunClouds,Far_AI,Medium_AI,Close_AI,Burst,ItemInfo,Close,M1,M1a,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,BaseSoundModeType,OpticsModes,PutMuzzle,Rhs_Mine_Muzzle,ThrowMuzzle,Rhs_Throw_Grenade,Rhs_Throw_Smoke,Rhs_Throw_Flare,Rhs_Throw_Flash";
 #endif
         }

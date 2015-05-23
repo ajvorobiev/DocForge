@@ -862,3 +862,9 @@ td.hidden-table-element
 ul {
     -webkit-padding-start: 8px;
 }
+
+.google-visualization-orgchart-nodesel {
+  border: 0 solid #e3ca4b;
+  background-color: #efefef;
+  background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#efefef));
+}
