@@ -7,20 +7,18 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Windows.Forms;
-using DocForge.Helpers;
-using Microsoft.WindowsAPICodePack.Dialogs;
-
 namespace DocForge.ViewModel
 {
+    using ClassForge;
+    using ClassForge.Model;
+    using Helpers;
+    using Microsoft.WindowsAPICodePack.Dialogs;
+    using ReactiveUI;
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
-    using ClassForge;
-    using ClassForge.Model;
-    using ReactiveUI;
 
     /// <summary>
     /// The main window view model.
@@ -86,7 +84,8 @@ namespace DocForge.ViewModel
         /// <summary>
         /// Gets or sets the property include string
         /// </summary>
-        public string PropertyIncludeFilterString {
+        public string PropertyIncludeFilterString
+        {
             get { return this.propertyIncludeFilterString; }
             set { this.RaiseAndSetIfChanged(ref this.propertyIncludeFilterString, value); }
         }
@@ -166,7 +165,7 @@ namespace DocForge.ViewModel
         /// <summary>
         /// Gets the generate command.
         /// </summary>
-        public ReactiveCommand<object> GenerateCommand { get; private set; } 
+        public ReactiveCommand<object> GenerateCommand { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
@@ -203,6 +202,9 @@ namespace DocForge.ViewModel
             this.SetProperties();
         }
 
+        /// <summary>
+        /// Execute the load command
+        /// </summary>
         private void LoadCommandExecute()
         {
             var dlg = new CommonOpenFileDialog();
@@ -215,6 +217,9 @@ namespace DocForge.ViewModel
             }
         }
 
+        /// <summary>
+        /// Execute the save command
+        /// </summary>
         private void SaveCommandExecute()
         {
             var dlg = new CommonSaveFileDialog { DefaultFileName = "DocForgeSettings1.xml" };
@@ -226,6 +231,9 @@ namespace DocForge.ViewModel
             }
         }
 
+        /// <summary>
+        /// Execute the browse for output folder command
+        /// </summary>
         private void BrowseOutputCommandExecute()
         {
             var dlg = new CommonOpenFileDialog { IsFolderPicker = true };
@@ -236,9 +244,12 @@ namespace DocForge.ViewModel
             }
         }
 
+        /// <summary>
+        /// Execute the generate command
+        /// </summary>
         private void GenerateCommandExecute()
         {
-            if(this.FilteredModel == null || this.FilteredModel.Count == 0 || string.IsNullOrWhiteSpace(this.OutputPath)) return;
+            if (this.FilteredModel == null || this.FilteredModel.Count == 0 || string.IsNullOrWhiteSpace(this.OutputPath)) return;
 
             var docGen = new HtmlGenerator();
 
@@ -266,7 +277,7 @@ namespace DocForge.ViewModel
 
             if (this.FullModel.Count != 0)
             {
-                var fModel = new Model() { Name = this.FullModel[0].Name };
+                var fModel = new Model { Name = this.FullModel[0].Name };
 
                 foreach (var cl in this.FullModel[0].Classes)
                 {
@@ -281,8 +292,8 @@ namespace DocForge.ViewModel
                 foreach (Class t in fModel.Classes)
                 {
                     var nCl = t;
-                    this.FilterClasses(ref nCl, bottomLevelFilters, propertyFilters);
-                    this.FilterProperties(ref nCl, propertyFilters);
+                    this.FilterClasses(ref nCl);
+                    this.FilterProperties(ref nCl);
                 }
 
                 fModel.UpdateReferences();
@@ -291,13 +302,17 @@ namespace DocForge.ViewModel
             }
         }
 
-        private void FilterProperties(ref Class nCl, string[] propertyFilters)
+        /// <summary>
+        /// Filter the properties
+        /// </summary>
+        /// <param name="nCl">The class to filter properties in</param>
+        private void FilterProperties(ref Class nCl)
         {
             var propertyClone = new List<Property>(nCl.Properties);
-            
+
             foreach (var property in propertyClone)
             {
-                if (!propertyFilters.Contains(property.Name))
+                if (!this.propertyFilters.Contains(property.Name))
                 {
                     nCl.Properties.RemoveAll(c => c.Name == property.Name);
                 }
@@ -306,7 +321,7 @@ namespace DocForge.ViewModel
             foreach (var cl in nCl.Classes)
             {
                 var c = cl;
-                this.FilterProperties(ref c, propertyFilters);
+                this.FilterProperties(ref c);
             }
         }
 
@@ -314,9 +329,7 @@ namespace DocForge.ViewModel
         /// Filters the classes
         /// </summary>
         /// <param name="classToFilter">The class to filter</param>
-        /// <param name="bottomLevelFilters"></param>
-        /// <param name="propertyFilters"></param>
-        private void FilterClasses(ref Class classToFilter, string[] bottomLevelFilters, string[] propertyFilters)
+        private void FilterClasses(ref Class classToFilter)
         {
             var classesClone = new List<Class>(classToFilter.Classes);
 
@@ -324,7 +337,7 @@ namespace DocForge.ViewModel
 
             foreach (Class t in classesClone)
             {
-                if (bottomLevelFilters.Contains(t.Name))
+                if (this.bottomLevelFilters.Contains(t.Name))
                 {
                     classToFilter.Classes.Remove(classToFilter.Classes.First(c => c.Name == t.Name));
                 }
@@ -333,7 +346,7 @@ namespace DocForge.ViewModel
                     if (t.Classes.Count > 0)
                     {
                         var foundClass = classToFilter.Classes.First(c => c.Name == t.Name);
-                        this.FilterClasses(ref foundClass, bottomLevelFilters, propertyFilters); 
+                        this.FilterClasses(ref foundClass);
                     }
                 }
             }
