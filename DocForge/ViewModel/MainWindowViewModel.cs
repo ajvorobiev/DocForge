@@ -10,6 +10,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using DocForge.Helpers;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace DocForge.ViewModel
 {
@@ -148,6 +149,10 @@ namespace DocForge.ViewModel
 
         public ReactiveCommand<object> BrowseOutputCommand { get; private set; }
 
+        public ReactiveCommand<object> SaveCommand { get; private set; }
+
+        public ReactiveCommand<object> LoadCommand { get; private set; }
+
         /// <summary>
         /// Gets the parse command.
         /// </summary>
@@ -182,6 +187,12 @@ namespace DocForge.ViewModel
             this.FilterCommand = ReactiveCommand.Create();
             this.FilterCommand.Subscribe(_ => this.FilterCommandExecute());
 
+            this.SaveCommand = ReactiveCommand.Create();
+            this.SaveCommand.Subscribe(_ => this.SaveCommandExecute());
+
+            this.LoadCommand = ReactiveCommand.Create();
+            this.LoadCommand.Subscribe(_ => this.LoadCommandExecute());
+
             this.GenerateCommand = ReactiveCommand.Create();
             this.GenerateCommand.Subscribe(_ => this.GenerateCommandExecute());
 
@@ -192,14 +203,36 @@ namespace DocForge.ViewModel
             this.SetProperties();
         }
 
+        private void LoadCommandExecute()
+        {
+            var dlg = new CommonOpenFileDialog();
+            dlg.Filters.Add(new CommonFileDialogFilter("XML file", "*.xml"));
+            dlg.DefaultFileName = "DocForgeSettings1.xml";
+
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok && File.Exists(dlg.FileName))
+            {
+                Settings.Load(this, dlg.FileName);
+            }
+        }
+
+        private void SaveCommandExecute()
+        {
+            var dlg = new CommonSaveFileDialog { DefaultFileName = "DocForgeSettings1.xml" };
+
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                var settings = new Settings();
+                settings.Save(this, dlg.FileName);
+            }
+        }
+
         private void BrowseOutputCommandExecute()
         {
-            var dialog = new System.Windows.Forms.FolderBrowserDialog();
-            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+            var dlg = new CommonOpenFileDialog { IsFolderPicker = true };
 
-            if (result == DialogResult.OK)
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok && Directory.Exists(dlg.FileName))
             {
-                this.OutputPath = dialog.SelectedPath;
+                this.OutputPath = dlg.FileName;
             }
         }
 
@@ -277,14 +310,17 @@ namespace DocForge.ViewModel
             }
         }
 
+        /// <summary>
+        /// Filters the classes
+        /// </summary>
+        /// <param name="classToFilter">The class to filter</param>
+        /// <param name="bottomLevelFilters"></param>
+        /// <param name="propertyFilters"></param>
         private void FilterClasses(ref Class classToFilter, string[] bottomLevelFilters, string[] propertyFilters)
         {
             var classesClone = new List<Class>(classToFilter.Classes);
-            
 
             classToFilter.InheritanceChildren = classToFilter.InheritanceChildren.DistinctBy(c => c.Name).ToList();
-
-            
 
             foreach (Class t in classesClone)
             {
@@ -314,10 +350,10 @@ namespace DocForge.ViewModel
             this.FolderPath = Directory.GetCurrentDirectory() + "\\mergetest";
             this.TopClassFilterString = "CfgVehicles, CfgAmmo, CfgMagazines, CfgWeapons, CfgGroups, CfgVehicleClasses, CfgFactionClasses";
             this.PropertyIncludeFilterString = "scope,magazines[],weapons[],enginePower,maxOmega,peakTorque,fuelCapacity,canFloat,maxFordingDepth,idleRPM,redRPM,maxSpeed,GearboxRatios,differentialType,maxBrakeTorque,maxHandBrakeTorque,compatibleItems[],hit,indirectHit,indirectHitRange,defaultMagazine,cost,ais_ce_penetrators[],ammo,muzzles[],displayName,inertia,vehicleClass,crew,faction,hiddenSelections[],hiddenSelectionsTextures[],torqueCurve[]";
-            this.ModelName = "Red Hammer Studios";
-            this.ModelDescription = "RHS: Armed Forces of the Russian Federation";
+            this.ModelName = "SuperAwesomeStudio";
+            this.ModelDescription = "MyProject";
             this.ModelVersion = "0.3.8";
-            this.OutputPath = "C:\\rhsclassdocs\\rhsafrf";
+            this.OutputPath = "";
             this.BottomClassFilterString = "Wheels,complexGearbox,ViewPilot,OpticsIn,CargoLight,HitPoints,Sounds,SpeechVariants,textureSources,AnimationSources,UserActions,Damage,Exhausts,Reflectors,ViewOptics,Library,EventHandlers,gunParticles,manual,close,short,medium,far,CamShakeExplode,CamShakeHit,CamShakeFire,CamShakePlayerFire,GunParticles,Single,FullAuto,single_medium_optics1,single_far_optics2,fullauto_medium,GP25Muzzle,Wounds,UniformInfo,RenderTargets,DestructionEffects,MFD,markerlights,MarkerLights,WingVortices,RotorLibHelicopterProperties,Viewoptics,Arguments,muzzle_rot1,HitEffect,Double,Volley,AIDouble,AIVolley,StandardSound,player,HE,AP,LowROFBMD2,HighROFBMD2,closeBMD2,shortBMD2,mediumBMD2,farBMD2,Single1,Single2,Single3,Burst1,Burst2,Burst3,gunClouds,Far_AI,Medium_AI,Close_AI,Burst,ItemInfo,Close,M1,M1a,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,BaseSoundModeType,OpticsModes,PutMuzzle,Rhs_Mine_Muzzle,ThrowMuzzle,Rhs_Throw_Grenade,Rhs_Throw_Smoke,Rhs_Throw_Flare,Rhs_Throw_Flash";
 #endif
         }
@@ -327,12 +363,11 @@ namespace DocForge.ViewModel
         /// </summary>
         public void BrowseFolderCommandExecute()
         {
-            var dialog = new System.Windows.Forms.FolderBrowserDialog();
-            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+            var dlg = new CommonOpenFileDialog { IsFolderPicker = true };
 
-            if (result == DialogResult.OK)
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok && Directory.Exists(dlg.FileName))
             {
-                this.FolderPath = dialog.SelectedPath;
+                this.FolderPath = dlg.FileName;
             }
         }
 
