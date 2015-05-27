@@ -28,3 +28,7 @@ Once all filters defined, use the `Filer` button to filter the model. The second
 ### Generating
 
 Select an output folder and press `Generate`. In the output folder find `index.html` to view the results. Internet is required for it to look right and for the charts to work.
+
+## Customization
+
+For now there is not much you can do. You can replace `logo.png` in the `%output%\public\` folder to show your own in the index page. A 260px square image will work best.
