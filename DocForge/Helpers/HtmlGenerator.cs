@@ -196,7 +196,7 @@ namespace DocForge.Helpers
         }
 
         /// <summary>
-        /// The directory copy.
+        /// Copy the directory
         /// </summary>
         /// <param name="sourceDirName">
         /// The source dir name.
@@ -249,10 +249,10 @@ namespace DocForge.Helpers
         }
 
         /// <summary>
-        /// The generate class page.
+        /// Generate a class page.
         /// </summary>
         /// <param name="c">
-        /// The c.
+        /// The class.
         /// </param>
         /// <param name="outputPath">
         /// The output path.
@@ -290,10 +290,10 @@ namespace DocForge.Helpers
         }
 
         /// <summary>
-        /// The generate toc.
+        /// Generate table of contents
         /// </summary>
         /// <param name="c">
-        /// The c.
+        /// The class.
         /// </param>
         /// <returns>
         /// The <see cref="string"/>.
@@ -328,7 +328,7 @@ namespace DocForge.Helpers
         }
 
         /// <summary>
-        /// The generate nested toc.
+        /// Generate the nested elements in the table of contents
         /// </summary>
         /// <param name="modelClass">
         /// The model class.
@@ -376,7 +376,7 @@ namespace DocForge.Helpers
         }
 
         /// <summary>
-        /// The generate properties table.
+        /// Generate properties table.
         /// </summary>
         /// <param name="c">
         /// The c.
@@ -413,10 +413,10 @@ namespace DocForge.Helpers
         }
 
         /// <summary>
-        /// The generate contained classes table.
+        /// Generate contained classes table.
         /// </summary>
         /// <param name="c">
-        /// The c.
+        /// The class.
         /// </param>
         /// <returns>
         /// The <see cref="string"/>.
@@ -453,10 +453,10 @@ namespace DocForge.Helpers
         }
 
         /// <summary>
-        /// The generate inheritance classes table.
+        /// Generate inheritance classes table.
         /// </summary>
         /// <param name="c">
-        /// The c.
+        /// The class.
         /// </param>
         /// <returns>
         /// The <see cref="string"/>.

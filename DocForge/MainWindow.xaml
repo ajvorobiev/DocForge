@@ -26,16 +26,19 @@
             <TextBlock Margin="10,10,0,0"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"
+                       RenderTransformOrigin="0.426,-0.313"
                        Text="Folder:"
-                       TextWrapping="Wrap" RenderTransformOrigin="0.426,-0.313" />
+                       TextWrapping="Wrap" />
             <TextBox Width="387"
-            	Height="20"
+                     Height="20"
                      Margin="8"
-            	HorizontalAlignment="Left"
-            	VerticalAlignment="Top"
-            	IsEnabled="False"
-            	Text="{Binding FolderPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            	TextWrapping="Wrap" />
+                     HorizontalAlignment="Left"
+                     VerticalAlignment="Top"
+                     IsEnabled="False"
+                     Text="{Binding FolderPath,
+                                    Mode=TwoWay,
+                                    UpdateSourceTrigger=PropertyChanged}"
+                     TextWrapping="Wrap" />
             <Button Width="37"
                     Margin="5,5,5,0"
                     HorizontalAlignment="Left"
@@ -121,7 +124,7 @@
                                Text="Top Level Includes"
                                TextWrapping="Wrap" />
 
-                    <TextBox Height="81"
+                    <TextBox Height="43"
                              Margin="5"
                              Text="{Binding TopClassFilterString,
                                             Mode=TwoWay,
@@ -132,7 +135,7 @@
                                VerticalAlignment="Top"
                                Text="Bottom Level Excludes"
                                TextWrapping="Wrap" />
-                    <TextBox Height="95"
+                    <TextBox Height="71"
                              Margin="5"
                              Text="{Binding BottomClassFilterString,
                                             Mode=TwoWay,

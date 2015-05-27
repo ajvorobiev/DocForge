@@ -9,16 +9,16 @@
 
 namespace DocForge.ViewModel
 {
-    using ClassForge;
-    using ClassForge.Model;
-    using Helpers;
-    using Microsoft.WindowsAPICodePack.Dialogs;
-    using ReactiveUI;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
+    using ClassForge;
+    using ClassForge.Model;
+    using Helpers;
+    using Microsoft.WindowsAPICodePack.Dialogs;
+    using ReactiveUI;
 
     /// <summary>
     /// The main window view model.
@@ -55,12 +55,39 @@ namespace DocForge.ViewModel
         /// </summary>
         private string propertyIncludeFilterString;
 
+        /// <summary>
+        /// The model name
+        /// </summary>
         private string modelName;
+
+        /// <summary>
+        /// The model description.
+        /// </summary>
         private string modelDescription;
+
+        /// <summary>
+        /// The model version.
+        /// </summary>
         private string modelVersion;
+
+        /// <summary>
+        /// The output path.
+        /// </summary>
         private string outputPath;
+
+        /// <summary>
+        /// The property filters.
+        /// </summary>
         private string[] propertyFilters;
+
+        /// <summary>
+        /// The top level filters.
+        /// </summary>
         private string[] topLevelFilters;
+
+        /// <summary>
+        /// The bottom level filters.
+        /// </summary>
         private string[] bottomLevelFilters;
 
         /// <summary>
@@ -99,24 +126,36 @@ namespace DocForge.ViewModel
             set { this.RaiseAndSetIfChanged(ref this.folderPath, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the model name.
+        /// </summary>
         public string ModelName
         {
             get { return this.modelName; }
             set { this.RaiseAndSetIfChanged(ref this.modelName, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the model description.
+        /// </summary>
         public string ModelDescription
         {
             get { return this.modelDescription; }
             set { this.RaiseAndSetIfChanged(ref this.modelDescription, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the model version.
+        /// </summary>
         public string ModelVersion
         {
             get { return this.modelVersion; }
             set { this.RaiseAndSetIfChanged(ref this.modelVersion, value); }
         }
 
+        /// <summary>
+        /// Gets or sets the output path.
+        /// </summary>
         public string OutputPath
         {
             get { return this.outputPath; }
@@ -146,10 +185,19 @@ namespace DocForge.ViewModel
         /// </summary>
         public ReactiveCommand<object> BrowseFolderCommand { get; private set; }
 
+        /// <summary>
+        /// Gets the browse output command.
+        /// </summary>
         public ReactiveCommand<object> BrowseOutputCommand { get; private set; }
 
+        /// <summary>
+        /// Gets the save command.
+        /// </summary>
         public ReactiveCommand<object> SaveCommand { get; private set; }
 
+        /// <summary>
+        /// Gets the load command.
+        /// </summary>
         public ReactiveCommand<object> LoadCommand { get; private set; }
 
         /// <summary>
@@ -269,22 +317,19 @@ namespace DocForge.ViewModel
             this.bottomLevelFilters = this.BottomClassFilterString.Split(new[] { ',' });
             this.propertyFilters = this.PropertyIncludeFilterString.Split(new[] { ',' });
 
-            for (int index = 0; index < topLevelFilters.Length; index++)
+            for (int index = 0; index < this.topLevelFilters.Length; index++)
             {
-                var topLevelFilter = topLevelFilters[index];
-                topLevelFilters[index] = topLevelFilter.Trim();
+                var topLevelFilter = this.topLevelFilters[index];
+                this.topLevelFilters[index] = topLevelFilter.Trim();
             }
 
             if (this.FullModel.Count != 0)
             {
                 var fModel = new Model { Name = this.FullModel[0].Name };
-
                 foreach (var cl in this.FullModel[0].Classes)
                 {
-                    if (topLevelFilters.Contains(cl.Name))
+                    if (this.topLevelFilters.Contains(cl.Name))
                     {
-                        //cl.InheritanceChildren = cl.Classes.DistinctBy(c => c.Name).ToList();
-
                         fModel.Classes.Add(cl.Copy());
                     }
                 }
@@ -350,8 +395,6 @@ namespace DocForge.ViewModel
                     }
                 }
             }
-
-            //classToFilter.Classes = classesClone;
         }
 
         /// <summary>

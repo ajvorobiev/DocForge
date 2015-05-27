@@ -1,16 +1,39 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Reflection;
-using System.ArrayExtensions;
-using ClassForge.Model;
-using DocForge.Helpers;
-using Newtonsoft.Json;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ObjectExtensions.cs" company="Red Hammer Studios">
+//   Copyright (c) 2015 Red Hammer Studios
+// </copyright>
+// <summary>
+//   Defines the ObjectExtensions type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
 
 namespace System
 {
+    using ArrayExtensions;
+    using Collections.Generic;
+    using Linq;
+    using Reflection;
+    using ClassForge.Model;
+    using DocForge.Helpers;
+    using Newtonsoft.Json;
+
+    /// <summary>
+    /// The object extensions.
+    /// </summary>
     public static class ObjectExtensions
     {
+        /// <summary>
+        /// The html page.
+        /// </summary>
+        /// <param name="cl">
+        /// The cl.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public static string HtmlPage<T>(this T cl) where T : Class
         {
             var result = cl.Name + ".html";
@@ -23,26 +46,82 @@ namespace System
             return result;
         }
 
+        /// <summary>
+        /// The html link to page.
+        /// </summary>
+        /// <param name="cl">
+        /// The cl.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public static string HtmlLinkToPage<T>(this T cl) where T : Class
         {
             return string.Format("<a href=\"{0}\">{1}</a>", cl.HtmlPage(), cl.Name);
         }
 
+        /// <summary>
+        /// The html link to page focused.
+        /// </summary>
+        /// <param name="cl">
+        /// The cl.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public static string HtmlLinkToPageFocused<T>(this T cl) where T : Class
         {
             return string.Format("<a href=\"{0}\" class=\"focus\">{1}</a>", cl.HtmlPage(), cl.Name);
         }
 
+        /// <summary>
+        /// The html link to top page.
+        /// </summary>
+        /// <param name="cl">
+        /// The cl.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public static string HtmlLinkToTopPage<T>(this T cl) where T : Class
         {
             return string.Format("<a href=\"{0}\" class=\"topcontainer\">{1}</a>", cl.HtmlPage(), cl.Name);
         }
 
+        /// <summary>
+        /// The html link to top page focused.
+        /// </summary>
+        /// <param name="cl">
+        /// The cl.
+        /// </param>
+        /// <typeparam name="T">
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public static string HtmlLinkToTopPageFocused<T>(this T cl) where T : Class
         {
             return string.Format("<a href=\"{0}\" class=\"topcontainer-focus\">{1}</a>", cl.HtmlPage(), cl.Name);
         }
 
+        /// <summary>
+        /// The top container.
+        /// </summary>
+        /// <param name="cl">
+        /// The class.
+        /// </param>
+        /// <typeparam name="T">
+        /// Type <see cref="Class"/>.
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="Class"/>.
+        /// </returns>
         public static Class TopContainer<T>(this T cl) where T : Class
         {
             var containArray = new List<Class>();
@@ -54,6 +133,19 @@ namespace System
             return containArray.Last();
         }
 
+
+        /// <summary>
+        /// Get the containers of a class.
+        /// </summary>
+        /// <param name="cl">
+        /// The class.
+        /// </param>
+        /// <typeparam name="T">
+        /// Type <see cref="Class"/>.
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="List"/>.
+        /// </returns>
         public static List<Class> Containers<T>(this T cl) where T : Class
         {
             var containArray = new List<Class>();
@@ -65,6 +157,21 @@ namespace System
             return containArray;
         }
 
+        /// <summary>
+        /// The model diagram json.
+        /// </summary>
+        /// <param name="m">
+        /// The model.
+        /// </param>
+        /// <param name="name">
+        /// The name.
+        /// </param>
+        /// <typeparam name="T">
+        /// Type <see cref="Model"/>.
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public static string ModelDiagramJSON<T>(this T m, string name) where T : Model
         {
             var nodes = new List<string>();
@@ -79,6 +186,18 @@ namespace System
             return string.Join(",", nodes);
         }
 
+        /// <summary>
+        /// Computes the model diagram json.
+        /// </summary>
+        /// <param name="cx">
+        /// The class.
+        /// </param>
+        /// <typeparam name="T">
+        /// Type <see cref="Class"/>.
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public static string ModelDiagramJSON<T>(this T cx) where T : Class
         {
             var nodes = new List<string>();
@@ -102,6 +221,18 @@ namespace System
             return string.Join(",", nodes);
         }
 
+        /// <summary>
+        /// Computes the class diagram json.
+        /// </summary>
+        /// <param name="cl">
+        /// The class.
+        /// </param>
+        /// <typeparam name="T">
+        /// Type <see cref="Type"/>.
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public static string ClassDiagramJSON<T>(this T cl) where T : Class
         {
             PlainClass root;
@@ -150,6 +281,18 @@ namespace System
             return JsonConvert.SerializeObject(root, new JsonSerializerSettings(){ NullValueHandling = NullValueHandling.Ignore});
         }
 
+        /// <summary>
+        /// The containment breadcrumb.
+        /// </summary>
+        /// <param name="cl">
+        /// The class.
+        /// </param>
+        /// <typeparam name="T">
+        /// Type <see cref="Class"/>
+        /// </typeparam>
+        /// <returns>
+        /// The <see cref="string"/> representing the containment breadcrumb.
+        /// </returns>
         public static string ContainmentBreadcrumb<T>(this T cl) where T : Class
         {
             var containArray = new List<Class>();
@@ -160,6 +303,15 @@ namespace System
             return string.Join(" > ", containArray.Select(s => s.HtmlLinkToPage()));
         }
 
+        /// <summary>
+        /// Resolve containment breadcrumb.
+        /// </summary>
+        /// <param name="cl">
+        /// The class.
+        /// </param>
+        /// <param name="containArray">
+        /// The contain array.
+        /// </param>
         private static void ResolveContainmentBreadcrumb(Class cl, ref List<Class> containArray)
         {
             if (cl.ContainmentParent != null)
@@ -169,6 +321,18 @@ namespace System
             }
         }
 
+        /// <summary>
+        /// Computes the class page name.
+        /// </summary>
+        /// <param name="cl">
+        /// The class.
+        /// </param>
+        /// <param name="computed">
+        /// The computed.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
         public static string ComputePageName(Class cl, string computed)
         {
             var parent = cl.ContainmentParent;
@@ -182,6 +346,18 @@ namespace System
             return result;
         }
         
+        /// <summary>
+        /// Gets the distinct by the named property,
+        /// </summary>
+        /// <param name="source">
+        /// The source.
+        /// </param>
+        /// <param name="keySelector">
+        /// The key Selector.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IEnumerable"/>.
+        /// </returns>
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             HashSet<TKey> seenKeys = new HashSet<TKey>();
@@ -193,6 +369,8 @@ namespace System
                 }
             }
         }
+
+        /* Below code is deep clone method found on the internet */
 
         private static readonly MethodInfo CloneMethod = typeof(Object).GetMethod("MemberwiseClone", BindingFlags.NonPublic | BindingFlags.Instance);
 

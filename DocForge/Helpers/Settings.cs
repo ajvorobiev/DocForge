@@ -1,8 +1,17 @@
-﻿namespace DocForge.Helpers
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Settings.cs" company="Red Hammer Studios">
+//   Copyright (c) 2015 Red Hammer Studios
+// </copyright>
+// <summary>
+//   The settings file
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace DocForge.Helpers
 {
-    using DocForge.ViewModel;
     using System.IO;
     using System.Xml.Serialization;
+    using ViewModel;
 
     /// <summary>
     /// The settings file
