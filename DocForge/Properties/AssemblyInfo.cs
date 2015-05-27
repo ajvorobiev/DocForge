@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DocForge")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Class documentation generator")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Red Hammer Studios")]
 [assembly: AssemblyProduct("DocForge")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright ©  2015 Red Hammer Studios")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
