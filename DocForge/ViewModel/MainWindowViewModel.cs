@@ -216,6 +216,11 @@ namespace DocForge.ViewModel
         public ReactiveCommand<object> GenerateCommand { get; private set; }
 
         /// <summary>
+        /// Gets the generate command.
+        /// </summary>
+        public ReactiveCommand<object> GenerateJsonCommand { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowViewModel"/> class.
         /// </summary>
         public MainWindowViewModel()
@@ -242,6 +247,9 @@ namespace DocForge.ViewModel
 
             this.GenerateCommand = ReactiveCommand.Create();
             this.GenerateCommand.Subscribe(_ => this.GenerateCommandExecute());
+
+            this.GenerateJsonCommand = ReactiveCommand.Create();
+            this.GenerateJsonCommand.Subscribe(_ => this.GenerateJsonCommandExecute());
 
             this.BrowseOutputCommand = ReactiveCommand.Create();
             this.BrowseOutputCommand.Subscribe(_ => this.BrowseOutputCommandExecute());
@@ -302,6 +310,15 @@ namespace DocForge.ViewModel
             var docGen = new HtmlGenerator();
 
             docGen.GenerateDocumentation(this.FilteredModel[0], this.OutputPath, this.ModelName, this.ModelVersion, this.ModelDescription, this.topLevelFilters, this.bottomLevelFilters, this.propertyFilters);
+        }
+
+        /// <summary>
+        /// Execute the generate command
+        /// </summary>
+        private void GenerateJsonCommandExecute()
+        {
+            if (this.FilteredModel == null || this.FilteredModel.Count == 0 || string.IsNullOrWhiteSpace(this.OutputPath)) return;
+
         }
 
         /// <summary>
