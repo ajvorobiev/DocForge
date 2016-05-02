@@ -18,6 +18,8 @@ namespace DocForge.ViewModel
     using ClassForge.Model;
     using Helpers;
     using Microsoft.WindowsAPICodePack.Dialogs;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
     using ReactiveUI;
 
     /// <summary>
@@ -318,7 +320,33 @@ namespace DocForge.ViewModel
         private void GenerateJsonCommandExecute()
         {
             if (this.FilteredModel == null || this.FilteredModel.Count == 0 || string.IsNullOrWhiteSpace(this.OutputPath)) return;
+            var parser = new CfgSimpleParser();
+            var dm = parser.GetDereferencedModel(this.FilteredModel[0]);
 
+            var header = new DereferencedHeader
+            {
+                BottomLevelFilters = string.Join(", ", this.bottomLevelFilters),
+                Description = this.ModelDescription,
+                Name = this.ModelName,
+                PropertyFilters = string.Join(", ", this.propertyFilters),
+                TopLevelFilters = string.Join(", ", this.topLevelFilters),
+                Version = this.ModelVersion
+            };
+
+            var exportStruct = new DereferencedStructure
+            {
+                Header = header,
+                Model = dm
+            };
+
+            const string savepath = "output.json";
+
+            if (!Directory.Exists(this.outputPath))
+            {
+                Directory.CreateDirectory(this.outputPath);
+            }
+
+            File.WriteAllText(this.outputPath + "\\" + savepath, JsonConvert.SerializeObject(exportStruct, Formatting.Indented, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver()}));
         }
 
         /// <summary>

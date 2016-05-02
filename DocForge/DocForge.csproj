@@ -100,6 +100,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\DereferencedHeader.cs" />
+    <Compile Include="Helpers\DereferencedStructure.cs" />
     <Compile Include="Helpers\HtmlGenerator.cs" />
     <Compile Include="Helpers\ModelExtensions.cs" />
     <Compile Include="Helpers\PlainClass.cs" />
