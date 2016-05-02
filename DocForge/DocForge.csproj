@@ -36,8 +36,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClassForge, Version=1.13.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ClassForge.dll.1.13.0\lib\net45\ClassForge.dll</HintPath>
+    <Reference Include="ClassForge, Version=1.14.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClassForge.dll.1.14.0\lib\net45\ClassForge.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack">
@@ -100,8 +100,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Helpers\DereferencedHeader.cs" />
-    <Compile Include="Helpers\DereferencedStructure.cs" />
     <Compile Include="Helpers\HtmlGenerator.cs" />
     <Compile Include="Helpers\ModelExtensions.cs" />
     <Compile Include="Helpers\PlainClass.cs" />
